@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de Commits</title>
+
+    <meta name="description" content="Quantidade de Commits">
+    <meta name="keywords" content="Quantidade de Commits">
+    <meta name="author" content="Yuri Gauze">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        
+        <div class="form">
+            <h1>Consultas de Commits</h1>
+            <form id="formulario">
+                <div class="box">
+                    <label>Repositorio: </label><br>
+                    <input type="text" id="repositorio" onblur="validarCampoVazio(this) " required/><br><br>
+                </div>
+                <div class="box">
+                    <label>Data Inicial:</label><br>
+                    <input type="date" id="dataInicial" onblur="validarCampoVazio(this)" required/><br><br>
+                </div>
+                <div class="box">
+                    <label>Data Final:</label><br>
+                    <input type="date" id="dataFinal" onblur="validarCampoVazio(this)" required/><br><br>
+                </div>
+                <div class="box">
+                    <input type="submit" />
+                    <button onclick="location.href='repositorio.html'">Ver commits salvos</button><br><br>
+                </div>
+                <div id="dados"></div><br><br>
+                <div id="tempo"></div>
+                <div id="dias"></div>
+                <div id="qtdforks"></div><br>
+                <div id="estrelas"></div><br>
+                <div id="dia"></div>
+                <div id="quantidades"> </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="index.js"></script>
+
+</body>
+
+</html>
