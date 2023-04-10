@@ -39,13 +39,16 @@ public class Repositorio {
     @Column(name = "link")
     private String link;
    
-    @Column(name = "data_inicial")
-    @Temporal(TemporalType.DATE)
+    @Column(name = "dataInicial")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dataInicial;
     
-    @Column(name = "data_final")
-    @Temporal(TemporalType.DATE)
+    @Column(name = "dataFinal")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dataFinal;
+    
+    @Column(name = "percentual")
+    private String percentual;
     
     @Column(name = "qtdCommits")
     private int qtdCommits;

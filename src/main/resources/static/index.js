@@ -5,11 +5,35 @@ function validarCampoVazio(campo) {
         campo.style.border = '';
     }
 }
-var nomerepo = ""
-var autorrepo = ""
-var linkrepo =""
-var qtds = 0
-var resumo = ""
+var nomerepo = "";
+var autorrepo = "";
+var linkrepo = "";
+var contadorCommits = 0;
+var resumo = "";
+var contadordias = 0;
+var diascomit = 0;
+
+
+
+function contadorDeCommits() {
+    let valor = 0;
+
+    function incrementar() {
+        valor++;
+    }
+
+    function obterValor() {
+        return valor;
+    }
+
+    return {
+        incrementar: incrementar,
+        obterValor: obterValor
+    };
+}
+
+
+
 
 
 const form = document.querySelector("form");
@@ -18,33 +42,35 @@ form.addEventListener('submit', function (event) {
     const repositorio = extrairUsuarioRepositorio(document.getElementById("repositorio").value);
     const dataInicial = document.querySelector("#dataInicial").value;
     const dataFinal = document.querySelector("#dataFinal").value;
+    const c = contadorDeCommits();
     //console.log(repositorio + " " + dataInicial + " " + dataFinal);
     buscarCommits(repositorio, dataInicial, dataFinal);
     buscarForks(repositorio);
     contarEstrelas(repositorio);
     calcularDiasComCommit(dataInicial, dataFinal);
     diascomCommit();
+    
 });
 
 function extrairUsuarioRepositorio(linkGithub) {
 
     //Extrair a parte https://github.com do link
     if (linkGithub.startsWith("https://github.com")) {
-        linkGithub = linkGithub.slice(19);  
-        const partes = linkGithub.split("/"); 
+        linkGithub = linkGithub.slice(19);
+        const partes = linkGithub.split("/");
         linkrepo = "https://github.com/" + linkGithub
         autorrepo = partes[0];
         nomerepo = partes[1];
         return linkGithub;
     } else if (linkGithub.startsWith("github.com")) {
-        linkGithub= linkGithub.slice(10);
+        linkGithub = linkGithub.slice(10);
         linkrepo = "https://github.com/" + linkGithub
-        const partes = linkGithub.split("/"); 
+        const partes = linkGithub.split("/");
         autorrepo = partes[0];
         nomerepo = partes[1];
         return linkGithub;
     } else {
-        const partes = linkGithub.split("/"); 
+        const partes = linkGithub.split("/");
         autorrepo = partes[0];
         nomerepo = partes[1];
         linkrepo = "https://github.com/" + linkGithub
@@ -53,13 +79,6 @@ function extrairUsuarioRepositorio(linkGithub) {
 
 }
 
-function passarDados(quantidade){
- qtds= qtds + quantidade;
-}
-
-function passarResumo(resumo){
-    resumo= resumo + quantidade;
-   }
 
 function buscarCommits(repositorio, dataInicial, dataFinal) {
 
@@ -81,7 +100,7 @@ function buscarCommits(repositorio, dataInicial, dataFinal) {
 
 function contarCommits(commits) {
     const commitsPorDia = {};
-    let diasComCommits = 0; 
+    let diasComCommits = 0;
     commits.forEach(element => {
         // Procurará a data dentro do objeto
         // date.substr(0,10): pegará apenas a data, ou seja, sem a hora
@@ -98,7 +117,7 @@ function contarCommits(commits) {
         else {
             commitsPorDia[dataCommit] = { quantidade: 1, data: dataCommit, mensagem: mensagem };
             diasComCommits++;
-            
+
         }
     });
 
@@ -128,16 +147,16 @@ function buscarForks(repositorio) {
 
 function contarEstrelas(repositorio) {
     const url = `https://api.github.com/repos/${repositorio}`;
-  
+
     fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const estrelas = data.stargazers_count;
-        document.getElementById("estrelas").textContent = `O repositório ${repositorio} tem ${estrelas} estrelas.`;
-      })
-      .catch(error => console.error(error));
-  }
-  
+        .then(response => response.json())
+        .then(data => {
+            const estrelas = data.stargazers_count;
+            document.getElementById("estrelas").textContent = `O repositório ${repositorio} tem ${estrelas} estrelas.`;
+        })
+        .catch(error => console.error(error));
+}
+
 
 
 
@@ -166,11 +185,12 @@ function mostrarTela(commits) {
         celulaData.innerHTML = commit.data.split('-').reverse().join('/'); //Colocando a data em um array e troca a posição, logo junta novamente usando /
         const celulaQuantidade = linha.insertCell();
         celulaQuantidade.innerHTML = commit.quantidade;
-        passarDados(quantidade);
+        contadorCommits = contadorCommits + commit.quantidade;
 
-        passarResumo(`No dia ${commit.data.split('-').reverse().join('/')} foram realizados ${commit.quantidade} commits`);
+
         const celulaMensagem = linha.insertCell();
         celulaMensagem.innerHTML = commit.mensagem;
+        resumo = resumo + `Dia: ${commit.data.split('-').reverse().join('/')} - Houve ${commit.quantidade} de Commits\n`;
         dias++;
 
     });
@@ -179,6 +199,8 @@ function mostrarTela(commits) {
     diascomCommit(dias);
     dados.innerHTML = "";
     dados.appendChild(tabela);
+    enviarFormulario();
+
 
 }
 
@@ -190,56 +212,67 @@ function calcularDiasComCommit(dataInicial, dataFinal) {
     const difference = day1.getTime() - day2.getTime();
     const days = difference / (1000 * 3600 * 24);
 
-
-    
-
-
     document.getElementById("tempo").innerHTML = `Dias disponíveis para a realização da atividade: ${days}`;
-    document.getElementById("dia").innerHTML = dataInicial;
-    
-
+    diascomit = days;
 
     console.log(`Dias disponíveis: ${days}`);
+    
 }
 
 function diascomCommit(qtd) {
+    contadordias = qtd;
 
     // Exibir o número de linhas
     document.getElementById("dias").textContent = `Dias com Commits: ${qtd}`;
     
 
-  }
+}
+
+function calcularPercentual(totalDias, diasComCommits) {
+
+    if (totalDias === 0) {
+        return 0;
+    }
+
+    // Calcular o percentual de dias com commits
+    const percentual = (diasComCommits / totalDias) * 100;
+    return percentual.toFixed(2);
+    
+}
 
 
 
-  $(document).ready(function() {
-    $('#formulario').submit(function(event) {
-        event.preventDefault();
-        var formData = {
-            'autor': autorrepo,
-            'repositorio': nomerepo,
-            'link' : linkrepo,
-            'data_inicial' : $('#dataInicial').val(),
-            'data_final' : $('#dataFinal').val(),
-            'qtdCommits' : qtds,
-            'resumo' : resumo
-        };
-        $.ajax({
-            type: 'POST',
-            url: '/repositorio/api',
-            data: JSON.stringify(formData),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-                console.log(data);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log('Erro:', textStatus);
-            }
-        })
-        .done(function(data) {
+function enviarFormulario() {
+
+    let dataInicial = document.querySelector("#dataInicial").value;
+    let dataFinal = document.querySelector("#dataFinal").value;
+
+    console.log(contadorCommits);
+    let percentual = calcularPercentual(diascomit, contadordias).toString() + "%";
+    console.log(percentual);
+    var formData = {
+        'autor': autorrepo,
+        'repositorio': nomerepo,
+        'link': linkrepo,
+        'dataInicial': dataInicial,
+        'dataFinal': dataFinal,
+        'qtdCommits': contadorCommits,
+        'percentual': percentual,
+        'resumo': resumo
+    };
+    fetch('/repositorio/api', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+        .then(response => response.json())
+        .then(data => {
             console.log(data);
+        })
+        .catch(error => {
+            console.error('Erro:', error);
         });
-    });
-});
+
+}

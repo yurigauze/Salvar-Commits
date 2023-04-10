@@ -12,20 +12,20 @@
     <meta name="author" content="Yuri Gauze">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body onload="buscarDados()">
     <div class="container">
 
         
-        <div >
+        <div id="Centro">
             <h1>Dados Armazenados</h1><br>
-            <button id="Voltar" onclick="location.href='index.html'">Voltar</button><br><br>
+            <button id="btnRepositorio" onclick="location.href='index.html'">Voltar</button>
+            <button id="btnRepositorio" onClick="window.location.reload()">Atualizar</button><br><br>
         </div>
-        
 
-
+        <div>
+            <br><br>
         <table id="tabela">
             <thead>
                 <tr>
@@ -43,14 +43,11 @@
             </thead>
             <tbody>
             </tbody>
-
-
+        </div>
 
     </div>
-
 
     <script type="text/javascript" src="repositorio.js"></script>
 
 </body>
-
 </html>

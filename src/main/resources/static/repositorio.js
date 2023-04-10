@@ -13,16 +13,20 @@ function generateTable(data) {
 
   data.forEach(item => {
     //insere dados na tabela
-    const row = tableBody.insertRow()
+    const row = tableBody.insertRow();
+
+    
     row.insertCell().textContent = item.id
     row.insertCell().textContent = item.autor
     row.insertCell().textContent = item.repositorio
     row.insertCell().textContent = item.link
-    row.insertCell().textContent = item.dataInicial
-    row.insertCell().textContent = item.dataFinal
+    row.insertCell().textContent = new Date(item.dataInicial).toLocaleDateString();
+    row.insertCell().textContent = new Date(item.dataFinal).toLocaleDateString();
     row.insertCell().textContent = item.qtdCommits
     row.insertCell().textContent = item.percentual
     row.insertCell().textContent = item.resumo
+    row.style.whiteSpace = 'pre-wrap';
+
 
     // Cria um botão "Excluir"
     const deleteButton = document.createElement('button')
